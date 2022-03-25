@@ -1,0 +1,2 @@
+# Blackjackdecider
+Blackjack strategy simulator
