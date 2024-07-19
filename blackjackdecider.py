@@ -12,7 +12,7 @@ def hitFunc(deck, hand, ddeck):
 # Function to determine the worth of a particular hand
 def detWorth(hand):
     temp = 0
-    aces = contains(hand, "ACE")
+    aces = count(hand, "ACE")
     for i in hand:
         temp = temp + i.cardWorth()
     if temp > 21 and aces > 0:
@@ -62,6 +62,26 @@ def initGame(deck, ddeck):
     player, ddeck = hitFunc(deck, player, ddeck)
     return player, dealer, deck, 0, 0
 
+def printDealer1stHand(hand):
+    string = ""
+    suit = hand[0].cardSuit() # temp value to hold suit
+    face = hand[0].cardFace() # temp value to hold face
+    '''suit = suit.replace("SPADES","♠️")
+    suit = suit.replace("HEARTS","♥️")
+    suit = suit.replace("DIAMONDS","♦️")
+    suit = suit.replace("CLUBS","♣️")
+    face = str(face).replace("ACE","A")
+    face = str(face).replace("JACK","J")
+    face = str(face).replace("QUEEN","Q")
+    face = str(face).replace("KING","K")'''
+    print("------------")
+    print("DEALER CARDS")
+    print("------------")
+    string += str(face) + " OF " + suit + " " 
+    string += "\n" + str(hand[0].cardWorth()) + " - Dealer"
+    print(string)
+    return hand[0].cardWorth()    
+
 # Updates hand worth and prints cards in hand
 def printCards(hand, id):
     if id == 0:
@@ -85,16 +105,17 @@ def printCards(hand, id):
 
 def main(games):
     deck = []
-    wins = 0
-    gamesPlayed = 0
-    popDeck(deck)
     ddeck = []  # Dead deck to contain all cards that were played
+    wins = 0
+    global gamesPlayed
+    popDeck(deck)
     for i in range(games):
+        print("Game #" +  str(i+1))
         if len(deck) < 157:
             deck, ddeck = reshuffleDeck(deck, ddeck)
         player, dealer, deck, playerCards, dealerCards = initGame(deck, ddeck)
         playerCards = printCards(player, 0)
-        dealerCards = printCards(dealer, 1)
+        dealerCards = printDealer1stHand(dealer)
         if playerCards == 21 and dealerCards < 21:
             print("You Win")
             wins += 1
@@ -179,9 +200,10 @@ def main(games):
             print("------------")
             print(str(playerCards) + " - Player")
             print(str(dealerCards) + " - Dealer")
-            print("Tie")
-            continue
+            print("Push")
+            main(1)
     print(f"{wins/gamesPlayed*100}% Won")
 
 if __name__ == "__main__":
+    gamesPlayed = 0
     main(int(input("# of Games: ")))
